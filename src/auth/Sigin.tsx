@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/authContext";
 
+import LogoMopartner from "../../public/logo.png";
+
 export default function Sigin() {
   const {
     status,
@@ -17,7 +19,7 @@ export default function Sigin() {
       <div className="w-full max-w-sm rounded-tl-3xl bg-primary-700 shadow">
         <div className="p-4 md:p-5 lg:p-6">
           <img
-            src="/logo.png"
+            src={LogoMopartner}
             className="-translate-y-6 -translate-x-2 w-4/3 py-5 items-center"
             alt=""
           />

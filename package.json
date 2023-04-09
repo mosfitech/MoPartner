@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "predeploy": "vite build",
+    "deploy": "gh-pages -d dist",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
     "@mui/styled-engine-sc": "^5.11.11",
     "firebase": "^9.19.1",
     "firebase-tools": "^11.25.3",
+    "gh-pages": "^5.0.0",
     "mapbox-gl": "^2.13.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

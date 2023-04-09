@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { AuthContext } from "../context/authContext";
+import logoMopartner from "../../public/logo.png";
 
 export default function Navbar({ setTheme }) {
   const { handleLogOut } = useContext(AuthContext);
@@ -13,7 +14,7 @@ export default function Navbar({ setTheme }) {
   return (
     <div className="fixed w-full flex items-center justify-between h-14 text-white z-10">
       <div className="flex items-center justify-start md:justify-center pl-3 w-14 md:w-64 h-14 bg-primary-700 dark:bg-gray-800 border-none">
-        <img className="px-4" src="/logo.png" />
+        <img className="px-4" src={logoMopartner} />
       </div>
       <div className="flex justify-end items-center h-14 bg-primary-700 dark:bg-gray-800 header-right">
         <ul className="flex items-center">
