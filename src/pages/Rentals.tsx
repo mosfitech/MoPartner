@@ -19,8 +19,8 @@ export default function Rentals() {
         <button
           className={
             addDevice
-              ? "px-4 py-2 bg-primary text-white  rounded-full font-semibold"
-              : "px-4 py-2 bg-gray-500 text-gray-900  rounded-full"
+              ? "px-4 py-2 bg-gray-900 hover:bg-purple text-white  rounded-lg font-semibold"
+              : "px-4 py-2 bg-gray-500 text-gray-900  rounded-lg"
           }
           onClick={() => setAddDevice(true)}
         >
@@ -29,8 +29,8 @@ export default function Rentals() {
         <button
           className={
             addDevice
-              ? "px-4 py-2 bg-gray-500 text-gray-900  rounded-full"
-              : "px-4 py-2 bg-primary text-white  rounded-full font-semibold"
+              ? "px-4 py-2 bg-gray-500 text-gray-900  rounded-lg"
+              : "px-4 py-2  bg-gray-900 hover:bg-purple  text-white  rounded-lg font-semibold"
           }
           onClick={() => setAddDevice(false)}
         >
@@ -97,7 +97,7 @@ export default function Rentals() {
                 id="grid-first-name"
               />
               <button
-                className="px-4 py-2 bg-primary text-white  rounded-full"
+                className="px-4 py-2 bg-gray-900 hover:bg-purple rounded-lg text-white font-semibold text-gray-50"
                 onClick={() => setAddDevice(true)}
               >
                 Add New Device
@@ -146,7 +146,7 @@ export default function Rentals() {
                 id="grid-first-name"
               />
               <button
-                className="px-4 py-2 bg-primary text-white  rounded-full"
+                className="px-4 py-2 bg-gray-900 hover:bg-purple rounded-lg font-semibold text-gray-50"
                 onClick={() => setAddDevice(true)}
               >
                 Add New Device
