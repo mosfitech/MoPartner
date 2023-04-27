@@ -1,80 +1,95 @@
-import { createContext, useEffect, useState } from 'react'
-import { logoutFirebase, onAuthStateHasChanged, singInWithGoogle } from '../auth/providers'
+import { createContext, useEffect, useState } from "react";
+import {
+  logoutFirebase,
+  onAuthStateHasChanged,
+  singInWithGoogle,
+} from "../auth/providers";
 
 export interface AuthStateContext {
-  userId: string | null
-  status: 'checking' | 'authenticated' | 'no-authenticated'
-  displayName: string
-  photoURL: string
-  email: string
-  handleLoginWithGoogle: () => Promise<void>
-  handleLoginWithCredentials: (password: string, email: string) => Promise<void>
-  handleRegisterWithCredentials: (password: string, email: string) => Promise<void>
-  handleLogOut: () => Promise<void>
+  userId: string | null;
+  status: "checking" | "authenticated" | "no-authenticated";
+  displayName: string;
+  photoURL: string;
+  email: string;
+  handleLoginWithGoogle: () => Promise<void>;
+  handleLoginWithCredentials: (
+    password: string,
+    email: string
+  ) => Promise<void>;
+  handleRegisterWithCredentials: (
+    password: string,
+    email: string
+  ) => Promise<void>;
+  handleLogOut: () => Promise<void>;
 }
 
 const initialState: Pick<
   AuthStateContext,
-  'status' | 'userId' | 'displayName' | 'photoURL' | 'email'
+  "status" | "userId" | "displayName" | "photoURL" | "email"
 > = {
   userId: null,
-  status: 'checking',
-  displayName: '',
-  photoURL: '',
-  email: '',
-}
+  status: "checking",
+  displayName: "",
+  photoURL: "",
+  email: "",
+};
 
-export const AuthContext = createContext({} as AuthStateContext)
+export const AuthContext = createContext({} as AuthStateContext);
 
 interface IElement {
-  children: JSX.Element | JSX.Element[]
+  children: JSX.Element | JSX.Element[];
 }
 
 export const AuthProvider = ({ children }: IElement) => {
-  const [session, setSession] = useState(initialState)
+  const [session, setSession] = useState(initialState);
 
   useEffect(() => {
-    onAuthStateHasChanged(setSession)
-  }, [])
+    onAuthStateHasChanged(setSession);
+  }, []);
 
   const handleLogOut = async () => {
-    logoutFirebase()
+    logoutFirebase();
     setSession({
       userId: null,
-      status: 'no-authenticated',
-      displayName: 'null',
-      photoURL: '',
-      email: '',
-    })
+      status: "no-authenticated",
+      displayName: "null",
+      photoURL: "",
+      email: "",
+    });
     try {
-      window.location.reload()
-      console.log('succes logout')
+      window.location.reload();
+      console.log("succes logout");
     } catch (error) {
-      console.log('fail')
+      console.log("fail");
     }
-  }
+  };
 
-  const validateAuth = (userId: string, displayName: string, email: string, photoURL: string) => {
+  const validateAuth = (
+    userId: string,
+    displayName: string,
+    email: string,
+    photoURL: string
+  ) => {
     if (userId)
       return setSession({
         userId,
-        status: 'authenticated',
+        status: "authenticated",
         displayName,
         email,
         photoURL,
-      })
-    handleLogOut()
-  }
+      });
+    handleLogOut();
+  };
 
-  const checking = () => setSession((prev) => ({ ...prev, status: 'checking' }))
+  const checking = () =>
+    setSession((prev) => ({ ...prev, status: "checking" }));
 
   const handleLoginWithGoogle = async () => {
-    console.log("ok")
-    checking()
-    const { uid, displayName, email, photoURL } = await singInWithGoogle()
-    const userId = uid
-    validateAuth(userId, displayName, email, photoURL)
-  }
+    checking();
+    const { uid, displayName, email, photoURL } = await singInWithGoogle();
+    const userId = uid;
+    validateAuth(userId, displayName, email, photoURL);
+  };
 
   return (
     <AuthContext.Provider
@@ -86,5 +101,5 @@ export const AuthProvider = ({ children }: IElement) => {
     >
       {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};

@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { AuthContext } from "../context/authContext";
-import logoMopartner from "../../public/logo.png";
+import logoMopartner from "/logo.png";
 
 export default function Navbar({ setTheme }) {
   const { handleLogOut } = useContext(AuthContext);

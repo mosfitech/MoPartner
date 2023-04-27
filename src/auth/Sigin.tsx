@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/authContext";
 
-import LogoMopartner from "../../public/logo.png";
+import LogoMopartner from "/logo.png";
 
 export default function Sigin() {
   const {
