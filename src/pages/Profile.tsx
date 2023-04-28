@@ -7,6 +7,7 @@ export default function Profile(props: any) {
   const { status, userId, handleLogOut, displayName, email, photoURL } =
     useContext(AuthContext);
   const [edit, setEdit] = useState(false);
+  const [alert, setAlert] = useState(false);
   const [businessName, setBusinessName] = useState<any>(
     props.data.business_name
   );
@@ -16,34 +17,67 @@ export default function Profile(props: any) {
     props.data.radius_rental
   );
 
-  const handleSubmit = () => {
-    axios
-      .post(
-        `https://api.berusaha.live/mopartner/`,
-        {
-          _id: userId,
-          business_name: businessName,
-          email: email,
-          owner_username: displayName,
-          latitude_shelter: latitude,
-          longitude_shelter: longitude,
-          radius_rental: radiusRental,
-        },
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json",
+  const handleSubmit = async () => {
+    if (!businessName) {
+      await axios
+        .post(
+          `https://api.berusaha.live/mopartner/`,
+          {
+            _id: userId,
+            business_name: businessName,
+            email: email,
+            owner_username: displayName,
+            latitude_shelter: latitude,
+            longitude_shelter: longitude,
+            radius_rental: radiusRental,
           },
-        }
-      )
-      .then(function (response) {
-        // handle success
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      });
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(function (response) {
+          // handle success
+          console.log(response.data);
+          setEdit(false);
+          setAlert(true);
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        });
+    } else {
+      await axios
+        .put(
+          `https://api.berusaha.live/mopartner/${userId}`,
+          {
+            business_name: businessName,
+            email: email,
+            owner_username: displayName,
+            latitude_shelter: latitude,
+            longitude_shelter: longitude,
+            radius_rental: radiusRental,
+          },
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(function (response) {
+          // handle success
+          console.log(response.data);
+          setEdit(false);
+          setAlert(true);
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        });
+    }
   };
   return (
     <div className="h-full ml-14 mt-14 mb-4 md:ml-64 p-16">
@@ -85,6 +119,25 @@ export default function Profile(props: any) {
         </div>
         <div></div>
       </div>
+      {alert && (
+        <div className="opacity-75 px-10 items-center bg-primary-50 flex justify-between mt-3 reboo">
+          <div className="px-4 py-3 rounded relative" role="alert">
+            <strong className="font-bold">Success ! </strong>
+            <span className="block sm:inline">add new device</span>
+          </div>
+          <span onClick={() => setAlert(false)}>
+            <svg
+              className="fill-current h-6 w-6 text-gray-950"
+              role="button"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <title>Close</title>
+              <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+            </svg>
+          </span>
+        </div>
+      )}
       {edit && (
         <div className="bg-gray-500 h-full p-8">
           <p
@@ -102,6 +155,7 @@ export default function Profile(props: any) {
               className="appearance-none block w-full bg-gray-200 text-gray-900 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               id="grid-first-name"
               onChange={(e) => setBusinessName(e.target.value)}
+              value={businessName}
             />
           </div>
           <p
@@ -120,6 +174,7 @@ export default function Profile(props: any) {
                 type="text"
                 className="appearance-none block w-full bg-gray-200 text-gray-900 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 id="grid-first-name"
+                value={latitude}
               />
             </div>
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -131,6 +186,7 @@ export default function Profile(props: any) {
                 type="text"
                 className="appearance-none block w-full bg-gray-200 text-gray-900 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 id="grid-first-name"
+                value={longitude}
               />
             </div>
           </div>
@@ -144,6 +200,7 @@ export default function Profile(props: any) {
                 type="number"
                 className="appearance-none block w-4/3 bg-gray-200 text-gray-900 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 id="grid-first-name"
+                value={radiusRental}
               />
             </div>
           </div>
