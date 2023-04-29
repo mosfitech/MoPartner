@@ -1,52 +1,118 @@
-import React, { Component, useState } from "react";
-import Maps from "../components/Maps";
 import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { ScrollMenu } from "react-horizontal-scrolling-menu";
+import "react-horizontal-scrolling-menu/dist/styles.css";
+import { LeftArrow, RightArrow } from "../components/Arrow";
+import HandleDetailRent from "../components/HandleDetailRent";
+import { AuthContext } from "../context/authContext";
 
 export default function Rentals(props: any) {
-  const [addDevice, setAddDevice] = useState(true);
+  const { status, userId, handleLogOut, displayName, email, photoURL } =
+    useContext(AuthContext);
+  const [addDevice, setAddDevice] = useState(false);
+  const [dataKits, setDataKits] = useState<any | null>([]);
   const [UUID, setUUID] = useState<any>();
-  const [category, setCategory] = useState<any>();
+  const [category, setCategory] = useState<any>("Road Bike");
   const [type, setType] = useState<any>();
   const [price, setPrice] = useState<any>();
   const [alert, setAlert] = useState(false);
-  const handleSubmit = () => {
-    axios
-      .post(
-        `https://api.berusaha.live/kits/`,
-        {
-          _id: UUID,
-          owner_email: props.data.email,
-          category: category,
-          type: type,
-          rental_status: 0,
-          warning_status: 0,
-          battray: 0,
-          rental_time: 0,
-          price: price,
-          latitude_kit: 0,
-          longitude_kit: 0,
-          latest_rent_username: "none",
-          latest_rent_email: "none",
-        },
-        {
+  const [alertData, setAlertData] = useState("");
+
+  const handleDelete = (uuid: any) => {
+    if (confirm(`delete kit id : ${uuid}`) == true) {
+      axios
+        .delete(`https://api.berusaha.live/kits/${uuid}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json",
           },
-        }
-      )
+        })
+        .then(function (response) {
+          // handle success
+          // console.log(response.data);
+          setAlert(true);
+          setAlertData(`Success ! delete kit id : ${uuid}`);
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        });
+    }
+  };
+
+  const handleSubmit = () => {
+    if (UUID == undefined) {
+      confirm("please uuid is required");
+    } else if (type == undefined) {
+      confirm("please type is required");
+    } else {
+      axios
+        .post(
+          `https://api.berusaha.live/kits/`,
+          {
+            _id: UUID,
+            owner_email: props.data.email,
+            category: category,
+            type: type,
+            rental_status: 0,
+            warning_status: 0,
+            battray: 5,
+            rental_time: 0,
+            price: price,
+            latitude_kit: 0,
+            longitude_kit: 0,
+            latest_rent_username: "none",
+            latest_rent_email: "none",
+          },
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(function (response) {
+          // handle success
+          // console.log(response.data.message);
+          if (response.data.message.errors != undefined) {
+            setAlertData(`Errors ! ${response.data.message.errors}`);
+          } else {
+            setAlert(true);
+            setAlertData(`${response.data.message}`);
+            setAddDevice(false);
+            setUUID(null);
+            setCategory("Road Bike");
+            setPrice(null);
+            setType(null);
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        });
+    }
+  };
+
+  const getDataKits = async () => {
+    await axios
+      .get(`https://api.berusaha.live/kits/${email}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      })
       .then(function (response) {
-        // handle success
-        console.log(response.data);
-        setAlert(true);
-        setAddDevice(false);
+        setDataKits(response.data);
+        // console.log(response.data);
       })
       .catch(function (error) {
         // handle error
         console.log(error);
       });
   };
-
+  useEffect(() => {
+    getDataKits();
+  }, [alert, addDevice, alertData]);
   return (
     <>
       <div className="flex justify-center ml-14 mt-16  md:ml-64">
@@ -54,11 +120,7 @@ export default function Rentals(props: any) {
           Customize your rental business
         </h1>
       </div>
-      {/* <div className="flex justify-center ml-14 mt-3 mb-4 md:ml-64">
-        <div className="w-10/12 h-96">
-          <Maps data={props.data} />
-        </div>
-      </div> */}
+
       <div className="flex justify-start px-5 gap-3 ml-14 mt-16 mb-4 md:ml-64">
         <button
           className={
@@ -66,7 +128,7 @@ export default function Rentals(props: any) {
               ? "px-4 py-2 bg-gray-900 hover:bg-purple text-white  rounded-lg font-semibold"
               : "px-4 py-2 bg-gray-500 text-gray-900  rounded-lg"
           }
-          onClick={() => setAddDevice(true)}
+          onClick={() => setAddDevice(!addDevice)}
         >
           Add New Device
         </button>
@@ -81,11 +143,12 @@ export default function Rentals(props: any) {
           Coming Soon
         </button>
       </div>
+
       {alert && (
         <div className="opacity-75 px-10 items-center bg-primary-50 flex justify-between ml-14 mt-3  md:ml-64">
           <div className="px-4 py-3 rounded relative" role="alert">
-            <strong className="font-bold">Success ! </strong>
-            <span className="block sm:inline">add new device</span>
+            {/* <strong className="font-bold">Success ! </strong> */}
+            <span className="block sm:inline">{alertData}</span>
           </div>
           <span onClick={() => setAlert(false)}>
             <svg
@@ -148,7 +211,6 @@ export default function Rentals(props: any) {
                 onChange={(e) => setType(e.target.value)}
                 className="appearance-none block w-full bg-gray-200 text-gray-900 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 type="text"
-                placeholder="KEV 122"
               />
             </div>
           </div>
@@ -173,6 +235,17 @@ export default function Rentals(props: any) {
           </div>
         </div>
       )}
+      <div className="h-full ml-14 mt-5 mb-4 md:ml-64">
+        {dataKits && (
+          <>
+            <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
+              {dataKits.map((data: any) => (
+                <HandleDetailRent data={data} handleDelete={handleDelete} />
+              ))}
+            </ScrollMenu>
+          </>
+        )}
+      </div>
     </>
   );
 }

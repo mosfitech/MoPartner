@@ -30,9 +30,9 @@ function App() {
       })
       .then(function (response) {
         // handle success
-        console.log(response.data);
+        // console.log(response.data);
         if (response.data === null) {
-          console.log(response.data);
+          // console.log(response.data);
           setVerifyDocument(true);
         } else {
           setDataPartner(response.data);

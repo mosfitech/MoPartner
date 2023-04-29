@@ -40,7 +40,7 @@ export default function Profile(props: any) {
         )
         .then(function (response) {
           // handle success
-          console.log(response.data);
+          // console.log(response.data);
           setEdit(false);
           setAlert(true);
         })
@@ -69,7 +69,7 @@ export default function Profile(props: any) {
         )
         .then(function (response) {
           // handle success
-          console.log(response.data);
+          // console.log(response.data);
           setEdit(false);
           setAlert(true);
         })
@@ -101,7 +101,7 @@ export default function Profile(props: any) {
             </div>
             <div className="flex flex-wrap justify-start">
               <p className="font-bold leading-relaxed text-slate-600 mb-4">
-                Radius Rental : {radiusRental}
+                Radius Rental : {radiusRental} Meter
               </p>
             </div>
             <div className="flex flex-wrap justify-between">

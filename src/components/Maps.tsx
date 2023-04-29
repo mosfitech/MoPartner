@@ -33,7 +33,7 @@ export default function Maps(props: any) {
     }
     if (props.kits !== undefined) {
       setDataKits(props.kits);
-      console.log(dataKits);
+      // console.log(dataKits);
     } else {
       setDataKits([]);
     }
